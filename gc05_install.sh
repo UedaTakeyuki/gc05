@@ -1,14 +1,68 @@
+#################################################
+#
+# Pip and others
+#
+# start
+#################################################
+
 #pip
-#sudo apt-get install python-pip
+sudo apt-get install python-pip
 
 # ipython
-sudo pip install ipython
-
-#nkf
-sudo apt-get install nkf
+# sudo pip install ipython
 
 # python libraries
 pip install paho-mqtt
+
+#################################################
+#
+# mosquitto 1.4.2 with websocket
+#
+# start
+#################################################
+
+## Step 1. preparing the build system# 
+sudo apt-get install build-essential
+sudo apt-get install libssl-dev
+sudo apt-get install cmake
+sudo apt-get install libc-ares-dev
+sudo apt-get install uuid-dev
+sudo apt-get install daemon
+
+## Step 2. libwebsocket
+wget http://git.libwebsockets.org/cgi-bin/cgit/libwebsockets/snapshot/libwebsockets-1.4-chrome43-firefox-36.tar.gz
+tar zxvf libwebsockets-1.4-chrome43-firefox-36.tar.gz
+cd libwebsockets-1.4-chrome43-firefox-36
+mkdir build
+cd build
+sudo cmake ..
+sudo make install
+sudo ldconfig
+cd ..
+
+Step 3. Download and build mosquitto 1.4.2
+wget http://mosquitto.org/files/source/mosquitto-1.4.2.tar.gz
+tar zxvf mosquitto-1.4.2.tar.gz
+cd mosquitto-1.4.2
+sed -i 's/WITH_WEBSOCKETS:=no/WITH_WEBSOCKETS:=yes/' config.mk
+
+make
+sudo make install
+sudo cp mosquitto.conf /etc/mosquitto
+echo "port 1883" | sudo tee -a /etc/mosquitto/mosquitto.conf
+echo "listener 9001" | sudo tee -a /etc/mosquitto/mosquitto.conf
+echo "protocol websockets" | sudo tee -a sudo /etc/mosquitto/mosquitto.conf
+cd ..
+
+# mosquitto_pub, mosquit_sub
+sudo apt-get install mosquitto-clients
+
+#################################################
+#
+# NGINX and php
+#
+# start
+#################################################
 
 # NGINX, php5-fpm
 sudo apt-get install nginx
@@ -20,6 +74,14 @@ sudo sed -i 's|#\t# With php5-fpm:|\t# With php5-fpm:|g' /etc/nginx/sites-enable
 sudo sed -i 's|#\tfastcgi_pass unix:/var/run/php5-fpm\.sock;|\tfastcgi_pass unix:/var/run/php5-fpm\.sock; }|g' /etc/nginx/sites-enabled/default
 # sudo sed -i 's|#\tfastcgi_index index\.php;|\tfastcgi_index index\.php;|g' /etc/nginx/sites-enabled/default
 # sudo sed -i 's|#\tinclude fastcgi_params;|\tinclude fastcgi_params; }|g' /etc/nginx/sites-enabled/default
+sudo chmod a+w /var/www/html
+
+#################################################
+#
+# Others
+#
+# start
+#################################################
 
 # xrdp No GUI
 #sudo apt-get install xrdp
@@ -27,9 +89,19 @@ sudo sed -i 's|#\tfastcgi_pass unix:/var/run/php5-fpm\.sock;|\tfastcgi_pass unix
 # gparted
 # sudo apt-get install gparted
 
+#nkf
+sudo apt-get install nkf
+
+#################################################
+#
+# gc05 
+#
+# start
+#################################################
+
 # SCRIPT
 script_path=/home/pi/SCRIPT
-if [ -e $script_path ]; then
+if [ -e $script_path ]; then :
 else
   mkdir $script_path
   cp SCRIPT/* $script_path
@@ -37,10 +109,10 @@ fi
 
 # www
 www_path=/var/www/html
-#if [ -e $www_path ]; then
+#if [ -e $www_path ]; then :
 #else
 #  mkdir $www_path
-  cp SCRIPT/* $www_path
+  cp www/* $www_path
 #fi
 
 # Chart.js
@@ -49,3 +121,14 @@ wget -P $www_path https://raw.githubusercontent.com/nnnick/Chart.js/master/Chart
 # browserMqtt
 # http://lealog.hateblo.jp/entry/2015/07/24/205838
 wget -P $www_path https://gist.githubusercontent.com/leader22/87350894dbe552f4c94a/raw/be5d4f3c803f3f3695553920d2d945dc2d62ad85/browserMqtt-1.3.5.js
+
+####################
+#                  #
+# For Each Sensor. #
+#                  #
+####################
+
+#max31855
+wget -P $script_path https://github.com/Tuckie/max31855/archive/master.zip
+unzip $script_path/master.zip
+rm $script_path/master.zip
