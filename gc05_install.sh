@@ -12,7 +12,7 @@ sudo apt-get install python-pip
 # sudo pip install ipython
 
 # python libraries
-pip install paho-mqtt
+sudo pip install paho-mqtt
 
 #################################################
 #
@@ -20,6 +20,7 @@ pip install paho-mqtt
 #
 # start
 #################################################
+sudo apt-get update
 
 ## Step 1. preparing the build system# 
 sudo apt-get install build-essential
@@ -28,6 +29,7 @@ sudo apt-get install cmake
 sudo apt-get install libc-ares-dev
 sudo apt-get install uuid-dev
 sudo apt-get install daemon
+sudo apt-get install libssl-dev
 
 ## Step 2. libwebsocket
 wget http://git.libwebsockets.org/cgi-bin/cgit/libwebsockets/snapshot/libwebsockets-1.4-chrome43-firefox-36.tar.gz
@@ -38,7 +40,7 @@ cd build
 sudo cmake ..
 sudo make install
 sudo ldconfig
-cd ..
+cd ../..
 
 Step 3. Download and build mosquitto 1.4.2
 wget http://mosquitto.org/files/source/mosquitto-1.4.2.tar.gz
@@ -53,6 +55,14 @@ echo "port 1883" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo "listener 9001" | sudo tee -a /etc/mosquitto/mosquitto.conf
 echo "protocol websockets" | sudo tee -a sudo /etc/mosquitto/mosquitto.conf
 cd ..
+
+# useradd mosquitto
+sudo useradd mosquitto
+
+# add to rc.local
+LF=$(printf '\\\012_')
+LF=${LF%_}
+sudo sed -i 's|exit 0|mosquitto -c /etc/mosquitto/mosquitto.conf'"$LF"'exit 0|g' /etc/rc.local
 
 # mosquitto_pub, mosquit_sub
 sudo apt-get install mosquitto-clients
