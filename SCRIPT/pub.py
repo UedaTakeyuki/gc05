@@ -3,8 +3,8 @@ import datetime
 import time
 import paho.mqtt.client as mqtt
 import logging
-
-import sensors
+import importlib
+#import sensors
 #import sys 
 #sys.path.append("/home/pi/SCRIPT/max31855-master")
 
@@ -13,6 +13,10 @@ import ConfigParser
 configfile = '/home/pi/SCRIPT/config.ini'
 ini = ConfigParser.SafeConfigParser()
 ini.read(configfile)
+
+# configure sensor reader.
+reader_name = "gc05_"+ini.get("main","sensor")
+sensor = importlib.import_module(reader_name)
 
 # configure logfile
 logfile_path = "/boot/DATA/log/"+ini.get("main","sensor")+".csv"
@@ -32,7 +36,8 @@ while 1:
 	now_string = now.strftime("%Y/%m/%d %H:%M:%S")+"."+"%03d" % (now.microsecond // 1000)
 
 	# read a sensor value.
-	value = sensors.gc05_read(ini.get("main","sensor"))
+	#value = sensors.gc05_read(ini.get("main","sensor"))
+	value = sensor.gc05_read_data()[0]["value"]
 
 	# send to mqtt server.
 	client.publish(topic, '{0},{1}'.format(now_string,value))
