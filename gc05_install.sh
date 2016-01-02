@@ -62,7 +62,7 @@ sudo useradd mosquitto
 # add to rc.local
 LF=$(printf '\\\012_')
 LF=${LF%_}
-sudo sed -i 's|exit 0|mosquitto -c /etc/mosquitto/mosquitto.conf'"$LF"'exit 0|g' /etc/rc.local
+sudo sed -i 's|^exit 0|^mosquitto -c /etc/mosquitto/mosquitto.conf'"$LF"'exit 0|g' /etc/rc.local
 
 # mosquitto_pub, mosquit_sub
 sudo apt-get install mosquitto-clients
@@ -116,6 +116,7 @@ else
   mkdir $script_path
   cp SCRIPT/* $script_path
 fi
+sudo sed -i 's|^exit 0|^python /home/pi/SCRIPT/pub.py'"$LF"'exit 0|g' /etc/rc.local
 
 # www
 www_path=/var/www/html
