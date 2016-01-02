@@ -18,4 +18,4 @@ def gc05_read_max31854():
 	thermocouple.cleanup()
 	return value
 if __name__ == '__main__':
-	gc05_read_max31854()
+	print gc05_read_max31854()
