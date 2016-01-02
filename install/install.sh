@@ -1,5 +1,5 @@
 #pip
-#sudo apt-get install python-pip
+sudo apt-get install python-pip
 
 # ipython
 sudo pip install ipython
@@ -27,25 +27,4 @@ sudo sed -i 's|#\tfastcgi_pass unix:/var/run/php5-fpm\.sock;|\tfastcgi_pass unix
 # gparted
 # sudo apt-get install gparted
 
-# SCRIPT
-script_path=/home/pi/SCRIPT
-if [ -e $script_path ]; then
-else
-  mkdir $script_path
-  cp SCRIPT/* $script_path
-fi
 
-# www
-www_path=/var/www/html
-#if [ -e $www_path ]; then
-#else
-#  mkdir $www_path
-  cp SCRIPT/* $www_path
-#fi
-
-# Chart.js
-wget -P $www_path https://raw.githubusercontent.com/nnnick/Chart.js/master/Chart.js
-
-# browserMqtt
-# http://lealog.hateblo.jp/entry/2015/07/24/205838
-wget -P $www_path https://gist.githubusercontent.com/leader22/87350894dbe552f4c94a/raw/be5d4f3c803f3f3695553920d2d945dc2d62ad85/browserMqtt-1.3.5.js

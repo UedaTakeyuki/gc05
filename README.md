@@ -18,5 +18,5 @@ unzip master.zip
 
 ```bash:
 cd gc05-master
-sh install.sh
+sh gc05_install.sh
 ```
