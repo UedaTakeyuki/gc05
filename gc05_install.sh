@@ -60,9 +60,7 @@ cd ..
 sudo useradd mosquitto
 
 # add to rc.local
-LF=$(printf '\\\012_')
-LF=${LF%_}
-sudo sed -i 's|^exit 0|^mosquitto -c /etc/mosquitto/mosquitto.conf'"$LF"'exit 0|g' /etc/rc.local
+sudo sed -i '$i\mosquitto -c /etc/mosquitto/mosquitto.conf > /dev/null 2>\&1 \&' /etc/rc.local
 
 # mosquitto_pub, mosquit_sub
 sudo apt-get install mosquitto-clients
@@ -109,6 +107,9 @@ sudo apt-get install nkf
 # start
 #################################################
 
+#hostname
+sudo sh -c "echo gc05 > /etc/hostname"
+
 # SCRIPT
 script_path=/home/pi/SCRIPT
 if [ -e $script_path ]; then :
@@ -116,7 +117,7 @@ else
   mkdir $script_path
   cp SCRIPT/* $script_path
 fi
-sudo sed -i 's|^exit 0|^python /home/pi/SCRIPT/pub.py'"$LF"'exit 0|g' /etc/rc.local
+sudo sed -i '$i\python /home/pi/SCRIPT/pub.py  > /dev/null 2>&1 &' /etc/rc.local
 
 # www
 www_path=/var/www/html
@@ -140,6 +141,6 @@ wget -P $www_path https://gist.githubusercontent.com/leader22/87350894dbe552f4c9
 ####################
 
 #max31855
-wget -P $script_path https://github.com/Tuckie/max31855/archive/master.zip
-unzip $script_path/master.zip
-rm $script_path/master.zip
+wget https://github.com/Tuckie/max31855/archive/master.zip
+unzip -d $script_path master.zip
+rm master.zip

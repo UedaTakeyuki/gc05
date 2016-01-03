@@ -19,7 +19,8 @@ reader_name = "gc05_"+ini.get("main","sensor")
 sensor = importlib.import_module(reader_name)
 
 # configure logfile
-logfile_path = "/boot/DATA/log/"+ini.get("main","sensor")+".csv"
+#logfile_path = "/boot/DATA/log/"+ini.get("main","sensor")+".csv"
+logfile_path = ini.get("main","log_base")+ini.get("main","sensor")+".csv"
 logging.basicConfig(format='%(message)s',filename=logfile_path,level=logging.INFO)
 
 # connect mqtt server
