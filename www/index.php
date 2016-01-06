@@ -64,7 +64,9 @@
     console.log([topic, payload].join(': '));
     // payload: 2015/12/26 06:35:47.418,23.0
     //   => datetime, value
-    [datetime, value] = payload.toString().split(",");
+//    [datetime, value] = payload.toString().split(",");
+    datetime = payload.toString().split(",")[0];
+    value = payload.toString().split(",")[1];
     // データ追加
     document.getElementById("datetime_tag").innerText = datetime;
     document.getElementById("value_tag").innerText = value + " ℃";
